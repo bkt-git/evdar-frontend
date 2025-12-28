@@ -1,86 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-        <title>EVDAR — Dashboard</title>
-        <link rel="stylesheet" href="style.css">
-        <style>
-            /* Sidebar layout */
-            .app {
-                display: flex;
-                height: 100vh;
-            }
-            .sidebar {
-                width: 220px;
-                background: #1f3b73;
-                color: white;
-                padding: 20px;
-                box-sizing: border-box;
-            }
-            .sidebar h3 { margin-top: 0 }
-            .nav a {
-                display: block;
-                color: #dbe9ff;
-                padding: 10px 8px;
-                margin: 6px 0;
-                text-decoration: none;
-                border-radius: 6px;
-            }
-            .nav a.active, .nav a:hover { background: rgba(255,255,255,0.06); color: white }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVDAR | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-            .content {
-                flex: 1;
-                padding: 20px;
-                overflow: auto;
-            }
+    <!-- Leaflet Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
 
-            /* small helpers used by scripts */
-            #controls { margin-bottom: 12px }
-            #carTable { width: 100%; border-collapse: collapse }
-            #carTable th, #carTable td { border: 1px solid #ddd; padding: 6px }
-            .speed-red { color: red; font-weight: bold }
-        </style>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script defer src="script.js"></script>
-    </head>
-    <body>
-        <div class="app">
-            <aside class="sidebar">
-                <h3>EVDAR</h3>
-                <div id="welcome" style="font-size:14px;opacity:0.9">—</div>
-                <div class="nav" style="margin-top:18px">
-                    <a href="#overview" data-view="overview" class="active">Overview</a>
-                    <a href="#vehicle" data-view="vehicle">Vehicle Location</a>
-                    <a href="#help" data-view="help">Help</a>
-                    <a href="#contact" data-view="contact">Contact Us</a>
-                    <a href="#about" data-view="about">About</a>
-                    <!-- admin-only link; shown only when user is admin -->
-                    <a href="#admin" data-view="admin" class="admin-link" style="display:none;color:#ffdddd">Admin Page</a>
-                </div>
+<body>
 
-                <!-- client select removed per request -->
+    <div class="dashboard-container">
+        <!-- SIDEBAR -->
+        <nav class="sidebar">
+            <div class="sidebar-brand">
+                <!-- Placeholder for circular logo -->
+                <div class="sidebar-logo">Logo</div>
+                <h2>EVDAR</h2>
+            </div>
+            <ul>
+                <li><a onclick="renderView('overview')" class="active"><span class="icon">📊</span><span
+                            class="text">Overview</span></a></li>
+                <li><a onclick="renderView('vehicle')"><span class="icon">🚗</span><span class="text">Vehicle
+                            Live</span></a></li>
+                <li class="admin-link" style="display:none"><a onclick="renderView('admin')"><span
+                            class="icon">🔒</span><span class="text">Admin</span></a></li>
+                <li><a onclick="renderView('help')"><span class="icon">❓</span><span class="text">Help</span></a></li>
+                <li><a onclick="renderView('contact')"><span class="icon">📞</span><span class="text">Contact
+                            Us</span></a></li>
+                <li><a onclick="renderView('about')"><span class="icon">ℹ️</span><span class="text">About</span></a>
+                </li>
+            </ul>
+            <ul style="flex-grow:0; margin-top:auto">
+                <li><a onclick="logout()"><span class="icon">🚪</span><span class="text">Logout</span></a></li>
+            </ul>
+        </nav>
 
-                <div style="margin-top:18px">
-                    <button onclick="logout()">Logout</button>
-                </div>
-            </aside>
+        <!-- MAIN CONTENT -->
+        <main class="main-content" id="mainContent">
 
-            <main class="content">
-                <!-- Main content removed per request. Use this area for page content. -->
-                <div id="mainContent" style="padding:20px;color:#333">Select a page from the sidebar.</div>
-            </main>
-        </div>
+            <!-- HEADER (Shared) -->
+            <header>
+                <h2 id="welcome" style="margin:0">Welcome</h2>
+                <!-- Additional header tools could go here -->
+            </header>
 
-        <script>
-            // sidebar navigation: delegate to `renderView` in script.js
-            document.querySelectorAll('.nav a').forEach(a=>{
-                a.addEventListener('click', e=>{
-                    e.preventDefault();
-                    document.querySelectorAll('.nav a').forEach(x=>x.classList.remove('active'));
-                    a.classList.add('active');
-                    const view = a.dataset.view;
-                    if (window.renderView) window.renderView(view);
-                });
-            });
-        </script>
-    </body>
+            <!-- VIEW: OVERVIEW (Default) -->
+            <div id="view-overview" class="view-section active">
+                <!-- Content cleared as requested -->
+            </div>
+
+            <!-- VIEW: GENERIC (Used for other pages) -->
+            <div id="view-generic" class="view-section">
+                <!-- Dynamic content injected here -->
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="dashboard_logic.js"></script>
+    <script src="script.js"></script>
+
+</body>
+
 </html>

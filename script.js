@@ -67,7 +67,59 @@ function initDashboard() {
     const adminLink = document.querySelector('.admin-link');
     if (adminLink) adminLink.style.display = (user.role === 'admin') ? 'block' : 'none';
 
-    if (window.renderView) window.renderView('overview');
+    // if (window.renderView) window.renderView('overview');
+
+    // --- COSMIC THEME INIT ---
+    // Create a fixed background layer for stars so they don't scroll away
+    let bgLayer = document.getElementById('cosmic-bg');
+    if (!bgLayer) {
+        bgLayer = document.createElement('div');
+        bgLayer.id = 'cosmic-bg';
+        bgLayer.style.position = 'fixed';
+        bgLayer.style.top = '0';
+        bgLayer.style.left = '0';
+        bgLayer.style.width = '100%';
+        bgLayer.style.height = '100%';
+        bgLayer.style.zIndex = '0';
+        bgLayer.style.pointerEvents = 'none';
+        bgLayer.style.overflow = 'hidden';
+        document.body.prepend(bgLayer);
+
+        // Aurora
+        const aurora = document.createElement("div");
+        aurora.classList.add("aurora");
+        bgLayer.appendChild(aurora);
+
+        // Stars
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement("div");
+            star.classList.add("star");
+            const duration = Math.random() * 3 + 2;
+            const delay = Math.random() * 5;
+            const size = Math.random() * 2 + 1;
+
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.setProperty('--duration', `${duration}s`);
+            star.style.setProperty('--delay', `${delay}s`);
+            bgLayer.appendChild(star);
+        }
+
+        // Shooting Stars
+        function spawnShootingStar() {
+            const shoot = document.createElement("div");
+            shoot.classList.add("shooting-star");
+            shoot.style.top = `${Math.random() * 50 - 20}%`;
+            shoot.style.left = `${Math.random() * 50 + 50}%`;
+            shoot.style.animationDuration = `${Math.random() * 1 + 1}s`;
+            bgLayer.appendChild(shoot);
+            setTimeout(() => shoot.remove(), 3000);
+        }
+        setInterval(spawnShootingStar, 5000);
+        spawnShootingStar();
+    }
 }
 
 function logout() {
@@ -83,123 +135,203 @@ function safeRedirect() {
 }
 
 // render content into the main area based on sidebar selection
-window.renderView = function(view) {
-    const main = document.getElementById('mainContent');
-    const raw = localStorage.getItem('user');
-    let user = null;
-    try { user = raw ? JSON.parse(raw) : null; } catch(e) { user = null; }
+// modified renderView to support Toggle approach
+window.renderView = function (view) {
+    const overview = document.getElementById('view-overview');
+    const generic = document.getElementById('view-generic');
 
-    if (!main) return;
+    // Manage Sidebar active states
+    document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+    // Try to find the link that called this (heuristically, or just skip visual active state for now)
 
+    // TOGGLE LOGIC
     if (view === 'overview') {
-        const name = user && user.username ? user.username : 'User';
-        const hrs = new Date().getHours();
-        let salutation = 'Hello';
-        if (hrs < 12) salutation = 'Good morning';
-        else if (hrs < 18) salutation = 'Good afternoon';
-        else salutation = 'Good evening';
+        if (overview) overview.style.display = 'block';
+        if (generic) generic.style.display = 'none';
 
-        main.innerHTML = `<h2>${salutation}, ${name}!</h2><p>Overview — select another page from the sidebar.</p>`;
+        // Refresh chart if needed? usually not needed since we just hid it.
         return;
     }
 
+    // For all other views, hide overview, show generic
+    if (overview) overview.style.display = 'none';
+    if (generic) {
+        generic.style.display = 'block';
+        generic.innerHTML = ''; // clear previous
+    } else {
+        return; // safeguard
+    }
+
+    // --- GENERIC VIEWS CONTENT ---
+
+    const raw = localStorage.getItem('user');
+    let user = null;
+    try { user = raw ? JSON.parse(raw) : null; } catch (e) { user = null; }
+
     if (view === 'vehicle') {
-        main.innerHTML = `<h2>Vehicle Location</h2><p>Map placeholder — integrate a map here.</p>`;
+        generic.innerHTML = `<div id="mapholder" style="height: calc(100vh - 140px); width: 100%; border-radius: 12px; background: rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center; color:#64748b;">Map Holder</div>`;
         return;
     }
 
     if (view === 'admin') {
-        // admin-only page
-        const raw = localStorage.getItem('user');
-        let user = null;
-        try { user = raw ? JSON.parse(raw) : null; } catch(e) { user = null; }
-
         if (!user || user.role !== 'admin') {
-            main.innerHTML = `<h2>Access denied</h2><p>This page is for administrators only.</p>`;
+            generic.innerHTML = `
+                <div class="card" style="text-align:center; padding: 40px;">
+                    <h2 style="color:#ef4444">Access Denied</h2>
+                    <p>This area is restricted to administrators.</p>
+                </div>`;
             return;
         }
 
-        main.innerHTML = `
-          <h2>Admin Console</h2>
-          <p>Welcome, ${user.username}. Use these tools to manage the system.</p>
-          <div style="margin-top:12px">
-            <button id="btnReloadUsers">Reload user list</button>
-            <div id="adminOutput" style="margin-top:12px;font-family:monospace;white-space:pre-wrap"></div>
-          </div>`;
+        generic.innerHTML = `
+          <div class="card" style="margin-bottom: 20px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                      <h2>Admin Console</h2>
+                      <p style="opacity:0.7; margin-top:4px;">Manage system users and data</p>
+                  </div>
+                  <button id="btnReloadUsers" style="width:auto; padding: 10px 20px;">↻ Refresh List</button>
+              </div>
+          </div>
 
-                // add user form
-                const formHtml = `
-                    <hr />
-                    <h3>Add user</h3>
-                    <form id="adminAddUserForm">
-                        <label>Username<br><input name="username" required></label><br>
-                        <label>Password<br><input name="password" type="password" required></label><br>
-                        <label>Role<br>
-                            <select name="role">
-                                <option value="user">user</option>
-                                <option value="admin">admin</option>
-                            </select>
-                        </label><br>
-                        <label>Car (optional)<br><input name="car" placeholder="car1.csv"></label><br>
-                        <button type="submit">Add user</button>
-                    </form>
-                    <div id="adminAddOutput" style="margin-top:10px"></div>
-                `;
+          <div class="dashboard-grid">
+              
+              <!-- User List -->
+              <div class="card">
+                  <h3>Users Database</h3>
+                  <div id="adminOutput" style="margin-top:15px; overflow-x:auto;">
+                      <p style="opacity:0.7; font-style:italic;">Click refresh to load users...</p>
+                  </div>
+              </div>
 
-                main.insertAdjacentHTML('beforeend', formHtml);
+              <!-- Add User Form -->
+              <div class="card">
+                  <h3>Add New User</h3>
+                  <form id="adminAddUserForm" style="display:flex; flex-direction:column; gap:15px; margin-top:15px;">
+                      
+                      <div class="form-group">
+                          <label>Username</label>
+                          <input name="username" required placeholder="e.g. driver1">
+                      </div>
 
-        // simple client-side action: fetch users from backend `/users` and render a table
+                      <div class="form-group">
+                          <label>Password</label>
+                          <input name="password" type="password" required placeholder="••••••••">
+                      </div>
+
+                          <div class="form-group">
+                              <label>Role</label>
+                              <select name="role" style="width:100%">
+                                  <option value="user">User</option>
+                                  <option value="admin">Admin</option>
+                              </select>
+                          </div>
+
+                      <button type="submit" style="margin-top:10px;">Create User</button>
+                  </form>
+                  <div id="adminAddOutput" style="margin-top:15px;"></div>
+              </div>
+
+          </div>
+        `;
+
+        // ... functionality binding for admin ...
         const btn = document.getElementById('btnReloadUsers');
         const out = document.getElementById('adminOutput');
-        function renderUsersTable(users) {
-            if (!Array.isArray(users) || users.length === 0) {
-                out.innerHTML = '<p>No users found.</p>';
-                return;
-            }
-            const keys = Object.keys(users[0]);
-            let html = '<table style="width:100%;border-collapse:collapse">';
-            html += '<thead><tr>' + keys.map(k=>`<th style="text-align:left;border-bottom:1px solid #ddd;padding:6px">${k}</th>`).join('') + '</tr></thead>';
-            html += '<tbody>' + users.map(u => '<tr>' + keys.map(k=>`<td style="padding:6px;border-bottom:1px solid #f3f3f3">${(u[k]===undefined)?'':u[k]}</td>`).join('') + '</tr>').join('') + '</tbody>';
-            html += '</table>';
-            out.innerHTML = html;
-        }
 
-        if (btn && out) {
+        // Load on mount automatically? optional.
+
+        if (btn) {
             btn.addEventListener('click', async () => {
-                out.textContent = 'Loading...';
+                out.innerHTML = '<p style="color:#3b82f6">Loading...</p>';
                 try {
-                    // If frontend is served via Live Server (port 5500),
-                    // point requests to the Flask backend on port 5000.
-                    const API_BASE =  "https://untempting-untemperamentally-renata.ngrok-free.dev";
-
+                    const API_BASE = (location.hostname === '127.0.0.1' || location.hostname === 'localhost') && location.port === '5500'
+                        ? 'http://127.0.0.1:5000' : '';
                     const res = await fetch(API_BASE + '/users');
                     if (!res.ok) throw new Error('Fetch failed: ' + res.status);
                     const users = await res.json();
-                    renderUsersTable(users);
+
+                    if (!Array.isArray(users) || users.length === 0) {
+                        out.innerHTML = '<p>No users found.</p>';
+                    } else {
+                        // Render Styled Table
+                        let html = '<table>';
+                        html += '<thead><tr>';
+                        // columns: user_id, username, role, car, Action
+                        html += '<th>ID</th><th>Username</th><th>Role</th><th>Car</th><th>Action</th>';
+                        html += '</tr></thead><tbody>';
+
+                        users.forEach(u => {
+                            html += '<tr>';
+                            html += `<td>${u.user_id || u.id || '-'}</td>`;
+                            html += `<td>${u.username}</td>`;
+                            html += `<td>${u.role}</td>`;
+                            html += `<td>${u.car || '-'}</td>`;
+
+                            // Prevent deleting self (current admin) could be nice, but for now just simple delete
+                            const uid = u.user_id || u.id;
+                            html += `<td style="text-align:center;">
+                                <button onclick="deleteUser('${uid}')" style="background:#fee2e2; color:#b91c1c; border:none; padding:4px 8px; font-size:12px; border-radius:4px; cursor:pointer;" title="Delete User">🗑️</button>
+                            </td>`;
+                            html += '</tr>';
+                        });
+                        html += '</tbody></table>';
+                        out.innerHTML = html;
+                    }
                 } catch (err) {
-                    out.textContent = 'Could not load users: ' + err.message;
+                    out.innerHTML = `<p style="color:#ef4444">Error: ${err.message}</p>`;
                 }
             });
         }
 
-        // --- Add user form handling ---
+
         const addForm = document.getElementById('adminAddUserForm');
         const addOutput = document.getElementById('adminAddOutput');
-        if (addForm && addOutput) {
+        if (addForm) {
             addForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const form = new FormData(addForm);
-                const payload = {
-                    username: form.get('username'),
-                    password: form.get('password'),
-                    role: form.get('role'),
-                    car: form.get('car')
-                };
+                const role = form.get('role');
+                const username = form.get('username');
 
-                addOutput.textContent = 'Adding...';
+                const btn = addForm.querySelector('button');
+                const originalText = btn.innerText;
+                btn.disabled = true;
+                btn.innerText = 'Creating...';
+                addOutput.innerHTML = '';
+
                 try {
-                    const API_BASE = "https://untempting-untemperamentally-renata.ngrok-free.dev";
+                    const API_BASE = (location.hostname === '127.0.0.1' || location.hostname === 'localhost') && location.port === '5500'
+                        ? 'http://127.0.0.1:5000' : '';
 
+                    // 1. Fetch current users to determine next ID
+                    const usersRes = await fetch(API_BASE + '/users');
+                    if (!usersRes.ok) throw new Error('Could not fetch users to assign ID');
+                    const users = await usersRes.json();
+
+                    // Simple logic: find max id (assuming they have 'user_id' or 'id')
+                    // We'll try user_id first
+                    let maxId = 0;
+                    if (Array.isArray(users)) {
+                        users.forEach(u => {
+                            const uid = parseInt(u.user_id || u.id || 0);
+                            if (uid > maxId) maxId = uid;
+                        });
+                    }
+                    const nextId = maxId + 1;
+
+                    // 2. Auto-Assign Car
+                    let assignedCar = "";
+                    if (role === 'user') {
+                        assignedCar = `car${nextId}.csv`;
+                    }
+
+                    const payload = {
+                        username: username,
+                        password: form.get('password'),
+                        role: role,
+                        car: assignedCar // Auto-assigned
+                    };
 
                     const res = await fetch(API_BASE + '/users', {
                         method: 'POST',
@@ -208,30 +340,60 @@ window.renderView = function(view) {
                     });
                     const data = await res.json();
                     if (!res.ok) throw new Error(data.error || 'Create failed');
-                    addOutput.textContent = 'User added (id: ' + data.user_id + ')';
+
+                    let successMsg = `Success! User <strong>${payload.username}</strong> created.`;
+                    if (role === 'user') {
+                        successMsg += ` Auto-assigned <strong>${assignedCar}</strong>.`;
+                    }
+
+                    addOutput.innerHTML = `<div style="padding:10px; background:#dcfce7; color:#166534; border-radius:6px;">${successMsg}</div>`;
+                    addForm.reset();
                 } catch (err) {
-                    addOutput.textContent = 'Could not add user: ' + err.message;
+                    addOutput.innerHTML = `<div style="padding:10px; background:#fee2e2; color:#991b1b; border-radius:6px;">Error: ${err.message}</div>`;
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = originalText;
                 }
             });
         }
-
         return;
     }
 
     if (view === 'help') {
-        main.innerHTML = `<h2>Help</h2><p>For assistance, contact support.</p>`;
+        generic.innerHTML = `<h2>Help</h2><p>For assistance, contact support.</p>`;
         return;
     }
-
     if (view === 'contact') {
-        main.innerHTML = `<h2>Contact Us</h2><p>Email: support@EVDAR.example</p>`;
+        generic.innerHTML = `<h2>Contact Us</h2><p>Email: support@EVDAR.example</p>`;
         return;
     }
-
     if (view === 'about') {
-        main.innerHTML = `<h2>About</h2><p>EVDAR — vehicle telemetry dashboard</p>`;
+        generic.innerHTML = `<h2>About</h2><p>EVDAR — vehicle telemetry dashboard</p>`;
         return;
     }
 
-    main.innerHTML = `<p>Unknown view: ${view}</p>`;
+    generic.innerHTML = `<p>Unknown view: ${view}</p>`;
 }
+
+// Global Delete User Function
+window.deleteUser = async function (userId) {
+    if (!confirm(`Are you sure you want to delete user ${userId}?`)) return;
+
+    try {
+        const API_BASE = 'https://untempting-untemperamentally-renata.ngrok-free.dev';
+
+        const res = await fetch(`${API_BASE}/users/${userId}`, { method: 'DELETE' });
+        if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || 'Delete failed');
+        }
+
+        alert('User deleted.');
+        // If we are on admin view, refresh list
+        const btn = document.getElementById('btnReloadUsers');
+        if (btn) btn.click();
+
+    } catch (err) {
+        alert('Error: ' + err.message);
+    }
+};
