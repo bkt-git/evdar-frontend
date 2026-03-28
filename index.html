@@ -4,16 +4,21 @@
 <head>
     <title>EVDAR | Login</title>
     <link rel="stylesheet" href="style.css">
+    <script src="config.js"></script>
 </head>
 
 <body>
     <div class="login-bg">
+        <video autoplay muted loop id="bg-video"
+            style="position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover;">
+            <source src="bg.mp4" type="video/mp4">
+        </video>
         <!-- Cosmic Background Elements (Injected via JS) -->
 
 
         <form onsubmit="login(event)" class="login-box">
-            <!-- Placeholder for circular logo -->
-            <div class="sidebar-logo" style="margin: 0 auto 20px auto;">Logo</div>
+            <img src="logo.png" alt="Logo"
+                style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin: 0 auto 20px auto; display:block;">
             <h2>EVDAR</h2>
 
             <input id="username" placeholder="Username" required>
