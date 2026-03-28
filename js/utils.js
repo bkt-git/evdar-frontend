@@ -39,8 +39,5 @@ window.getUser = function () {
 };
 
 window.getApiBase = function () {
-    // CONFIG: Replace with your active ngrok URL
-    // Get from: ngrok http 5000 -> https://xxxx-xx-xxx-xxx.ngrok.io
-    const NGROK_BACKEND_URL = 'https://untempting-untemperamentally-renata.ngrok-free.dev';
-    return NGROK_BACKEND_URL;
+    return 'https://dentirostral-unpastorally-chrystal.ngrok-free.dev';
 };

@@ -88,44 +88,9 @@ window.renderStaticView = function (view, containerId) {
                     <div style="width:100px; height:100px; border-radius:50%; margin:0 auto 15px auto; overflow:hidden; border:2px solid rgba(255,255,255,0.1);">
                         <img src="images/lead.png" alt="Lead" style="width:100%; height:100%; object-fit:cover; transform: scale(1.2); object-position: center 25%;">
                     </div>
-                    <h4 style="margin:10px 0 5px 0; color:#f1f5f9;">Vedant Patel</h4>
-                    <p style="color:#94a3b8; font-size:0.85rem;">Co-Founder & Lead</p>
+                    <h4 style="margin:10px 0 5px 0; color:#f1f5f9;">Mili Mangukiya</h4>
+                    <p style="color:#94a3b8; font-size:0.85rem;"Founder & Lead</p>
                 </div>
-                <!-- Founder 2: Tech -->
-                <div style="background:rgba(30, 41, 59, 0.6); padding:20px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.05);">
-                    <div style="width:100px; height:100px; border-radius:50%; margin:0 auto 15px auto; overflow:hidden; border:2px solid rgba(255,255,255,0.1);">
-                         <img src="images/tech.png" alt="Tech" style="width:100%; height:100%; object-fit:cover; object-position: center top;">
-                    </div>
-                    <h4 style="margin:10px 0 5px 0; color:#f1f5f9;">Mauryadeepsinh Zala</h4>
-                    <p style="color:#94a3b8; font-size:0.85rem;">Co-Founder & Tech</p>
-                </div>
-                <!-- Founder 3: Design -->
-                <div style="background:rgba(30, 41, 59, 0.6); padding:20px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.05);">
-                    <div style="width:100px; height:100px; border-radius:50%; margin:0 auto 15px auto; overflow:hidden; border:2px solid rgba(255,255,255,0.1);">
-                         <img src="images/design.PNG" alt="Design" style="width:100%; height:100%; object-fit:cover; object-position: center 25%;">
-                    </div>
-                    <h4 style="margin:10px 0 5px 0; color:#f1f5f9;">Maitri Salunke</h4>
-                    <p style="color:#94a3b8; font-size:0.85rem;">Co-Founder & Design</p>
-                </div>
-                <!-- Founder 4: Strategy -->
-                 <div style="background:rgba(30, 41, 59, 0.6); padding:20px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.05);">
-                    <div style="width:100px; height:100px; border-radius:50%; margin:0 auto 15px auto; overflow:hidden; border:2px solid rgba(255,255,255,0.1);">
-                         <img src="images/stratergy.jpeg" alt="Strategy" style="width:100%; height:100%; object-fit:cover; object-position: top;">
-                    </div>
-                    <h4 style="margin:10px 0 5px 0; color:#f1f5f9;">Vivek Patel</h4>
-                    <p style="color:#94a3b8; font-size:0.85rem;">Co-Founder & Strategy</p>
-                </div>
-            </div>
-
-            <h3 style="margin:40px 0 20px 0; color:#f8fafc; border-left:4px solid #8b5cf6; padding-left:15px;">Our Guiding Light</h3>
-            <div style="background:rgba(139, 92, 246, 0.1); padding:30px; border-radius:16px; border:1px solid rgba(139, 92, 246, 0.2); display:flex; align-items:center; gap:25px; flex-wrap:wrap;">
-                 <div style="width:120px; height:120px; border-radius:50%; flex-shrink:0; overflow:hidden; border:3px solid rgba(255,255,255,0.1);">
-                    <img src="images/mentor.jpg" alt="Mentor" style="width:100%; height:100%; object-fit:cover;">
-                </div>
-                <div>
-                    <h4 style="margin:0 0 10px 0; font-size:1.3rem; color:#f1f5f9;">Narendrakumar V. Chauhan</h4>
-                    <p style="color:#cbd5e1; font-style:italic; margin-bottom:10px;">"Success is not final, failure is not fatal: it is the courage to continue that counts."</p>
-                    <p style="color:#94a3b8; font-size:0.9rem; margin:0;">Professor & Project Guide</p>
                 </div>
             </div>
             
