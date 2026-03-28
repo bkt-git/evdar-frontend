@@ -86,7 +86,7 @@ window.renderStaticView = function (view, containerId) {
                 <!-- Founder 1: Lead -->
                 <div style="background:rgba(30, 41, 59, 0.6); padding:20px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.05);">
                     <div style="width:100px; height:100px; border-radius:50%; margin:0 auto 15px auto; overflow:hidden; border:2px solid rgba(255,255,255,0.1);">
-                        <img src="images/lead.png" alt="Lead" style="width:100%; height:100%; object-fit:cover; transform: scale(1.2); object-position: center 25%;">
+                        <img src="images/lead.jpeg" alt="Lead" style="width:100%; height:100%; object-fit:cover; transform: scale(1.2); object-position: center 25%;">
                     </div>
                     <h4 style="margin:10px 0 5px 0; color:#f1f5f9;">Mili Mangukiya</h4>
                     <p style="color:#94a3b8; font-size:0.85rem;"Founder & Lead</p>
