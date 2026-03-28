@@ -63,7 +63,7 @@ async function login(event) {
 
     // CONFIG: Replace this URL with your active ngrok URL
     // Get from: ngrok http 5000 -> https://xxxx-xx-xxx-xxx.ngrok.io
-    const NGROK_BACKEND_URL = "https://untempting-untemperamentally-renata.ngrok-free.dev";
+    const NGROK_BACKEND_URL = "https://dentirostral-unpastorally-chrystal.ngrok-free.dev";
     
     const API_BASE = NGROK_BACKEND_URL;
 
